@@ -66,19 +66,6 @@ class EnterpriseManager:
             raise EnterpriseManagementException("Invalid department: must be HR, FINANCE, LEGAL or LOGISTICS")
 
     @staticmethod
-    def register_project(company_cif: str, project_achronym: str,  # pylint: disable=too-many-arguments
-                         project_description: str, department: str,
-                         date: str, budget: float):
-        """Registers a new project for a company"""
-        EnterpriseManager._validate_cif(company_cif)
-        EnterpriseManager._validate_acronym(project_achronym)
-        EnterpriseManager._validate_description(project_description)
-        EnterpriseManager._validate_department(department)
-        EnterpriseManager._validate_date(date)
-        EnterpriseManager._validate_budget(budget)
-        pass
-
-    @staticmethod
     def _validate_date(date):
         """Validates the project start date"""
         if not isinstance(date, str):
@@ -110,3 +97,43 @@ class EnterpriseManager:
             raise EnterpriseManagementException("Invalid budget: must have exactly 2 decimal places")
         if budget < 50000.00 or budget > 1000000.00:
             raise EnterpriseManagementException("Invalid budget: must be between 50000.00 and 1000000.00")
+
+    @staticmethod
+    def _check_duplicate(company_cif, project_achronym):
+        """Checks for duplicate project in the JSON file"""
+        if not os.path.exists(CORPORATE_OPERATIONS_FILE):
+            return
+        with open(CORPORATE_OPERATIONS_FILE, "r", encoding="utf-8") as file:
+            data = json.load(file)
+        for project in data:
+            if (project["company_cif"] == company_cif and
+                    project["project_acronym"] == project_achronym):
+                raise EnterpriseManagementException("Duplicate: project already registered for this CIF")
+
+    @staticmethod
+    def _save_project(project):
+        """Saves the project to the JSON file"""
+        data = []
+        if os.path.exists(CORPORATE_OPERATIONS_FILE):
+            with open(CORPORATE_OPERATIONS_FILE, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        data.append(project.to_json())
+        with open(CORPORATE_OPERATIONS_FILE, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+
+    @staticmethod
+    def register_project(company_cif: str, project_achronym: str,  # pylint: disable=too-many-arguments
+                         project_description: str, department: str,
+                         date: str, budget: float):
+        """Registers a new project for a company"""
+        EnterpriseManager._validate_cif(company_cif)
+        EnterpriseManager._validate_acronym(project_achronym)
+        EnterpriseManager._validate_description(project_description)
+        EnterpriseManager._validate_department(department)
+        EnterpriseManager._validate_date(date)
+        EnterpriseManager._validate_budget(budget)
+        EnterpriseManager._check_duplicate(company_cif, project_achronym)
+        project = EnterpriseProject(
+            company_cif, project_achronym, project_description, department, date, budget)
+        EnterpriseManager._save_project(project)
+        return project.project_id
