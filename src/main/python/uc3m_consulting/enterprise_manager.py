@@ -137,3 +137,8 @@ class EnterpriseManager:
             company_cif, project_achronym, project_description, department, date, budget)
         EnterpriseManager._save_project(project)
         return project.project_id
+
+    @staticmethod
+    def register_document(input_file: str):
+        """Registers a document for a project"""
+        pass
