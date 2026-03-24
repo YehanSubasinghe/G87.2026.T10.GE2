@@ -6,7 +6,7 @@ from datetime import datetime
 from uc3m_consulting import EnterpriseManager, EnterpriseManagementException
 
 
-class TestRegisterProject(unittest.TestCase):
+class TestRegisterProject(unittest.TestCase): # pylint: disable=too-many-public-methods
     """Test cases for register_project using EC and BV analysis"""
 
     VALID_CIF = "B12345674"
