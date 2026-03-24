@@ -139,6 +139,30 @@ class EnterpriseManager:
         return project.project_id
 
     @staticmethod
+    def _read_input_file(input_file):
+        """Reads and parses the input JSON file"""
+        if not os.path.exists(input_file):
+            raise EnterpriseManagementException("Input file not found")
+        try:
+            with open(input_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except json.JSONDecodeError as ex:
+            raise EnterpriseManagementException("File is not JSON formatted") from ex
+        return data
+
+    @staticmethod
+    def _validate_document_structure(data):
+        """Validates the JSON has the expected keys"""
+        if not isinstance(data, dict):
+            raise EnterpriseManagementException("JSON does not have the expected structure")
+        if "PROJECT_ID" not in data or "FILENAME" not in data:
+            raise EnterpriseManagementException("JSON does not have the expected structure")
+        if not data["PROJECT_ID"] or not data["FILENAME"]:
+            raise EnterpriseManagementException("JSON data has no valid values")
+
+    @staticmethod
     def register_document(input_file: str):
         """Registers a document for a project"""
+        data = EnterpriseManager._read_input_file(input_file)
+        EnterpriseManager._validate_document_structure(data)
         pass
