@@ -10,3 +10,10 @@ class EnterpriseManager:
         """RETURNs TRUE IF THE IBAN RECEIVED IS VALID SPANISH IBAN,
         OR FALSE IN OTHER CASE"""
         return True
+
+    @staticmethod
+    def register_project(company_cif: str, project_achronym: str,
+                         project_description: str, department: str,
+                         date: str, budget: float):
+        """Registers a new project for a company"""
+        pass
