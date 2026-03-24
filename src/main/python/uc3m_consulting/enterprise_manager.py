@@ -74,4 +74,39 @@ class EnterpriseManager:
         EnterpriseManager._validate_acronym(project_achronym)
         EnterpriseManager._validate_description(project_description)
         EnterpriseManager._validate_department(department)
+        EnterpriseManager._validate_date(date)
+        EnterpriseManager._validate_budget(budget)
         pass
+
+    @staticmethod
+    def _validate_date(date):
+        """Validates the project start date"""
+        if not isinstance(date, str):
+            raise EnterpriseManagementException("Invalid date: must be a string")
+        if not re.match(r'^\d{2}/\d{2}/\d{4}$', date):
+            raise EnterpriseManagementException("Invalid date: format must be DD/MM/YYYY")
+        parts = date.split('/')
+        day, month, year = int(parts[0]), int(parts[1]), int(parts[2])
+        if day < 1 or day > 31:
+            raise EnterpriseManagementException("Invalid date: DD must be between 01 and 31")
+        if month < 1 or month > 12:
+            raise EnterpriseManagementException("Invalid date: MM must be between 01 and 12")
+        if year < 2025 or year > 2027:
+            raise EnterpriseManagementException("Invalid date: year must be between 2025 and 2027")
+        try:
+            date_obj = datetime.strptime(date, "%d/%m/%Y")
+        except ValueError as ex:
+            raise EnterpriseManagementException("Invalid date: not a valid calendar date") from ex
+        today = datetime.now(timezone.utc).replace(tzinfo=None, hour=0, minute=0, second=0, microsecond=0)
+        if date_obj < today:
+            raise EnterpriseManagementException("Invalid date: must be equal to or after request date")
+
+    @staticmethod
+    def _validate_budget(budget):
+        """Validates the project budget"""
+        if not isinstance(budget, float):
+            raise EnterpriseManagementException("Invalid budget: must be a float")
+        if round(budget, 2) != budget:
+            raise EnterpriseManagementException("Invalid budget: must have exactly 2 decimal places")
+        if budget < 50000.00 or budget > 1000000.00:
+            raise EnterpriseManagementException("Invalid budget: must be between 50000.00 and 1000000.00")
