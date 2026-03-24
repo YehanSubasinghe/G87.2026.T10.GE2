@@ -197,3 +197,36 @@ class EnterpriseManager:
         except Exception as ex:
             raise EnterpriseManagementException(
                 "Internal processing error when getting the file_signature") from ex
+
+    @staticmethod
+    def check_project_budget(project_id: str):
+        """Calculates the budget balance for a given project"""
+        if not re.match(r'^[0-9a-f]{32}$', project_id):
+            raise EnterpriseManagementException("Invalid PROJECT_ID")
+        try:
+            with open("flows.json", "r", encoding="utf-8") as file:
+                flows = json.load(file)
+        except Exception as ex:
+            raise EnterpriseManagementException(
+                "Internal processing error") from ex
+        total = 0.0
+        found = False
+        for flow in flows:
+            if flow.get("PROJECT_ID") == project_id:
+                found = True
+                if "inflow" in flow:
+                    total += float(flow["inflow"])
+                else:
+                    total -= float(flow["outflow"])
+        if not found:
+            raise EnterpriseManagementException(
+                "PROJECT_ID not found in movement file")
+        result = {
+            "PROJECT_ID": project_id,
+            "date": datetime.timestamp(datetime.now(timezone.utc)),
+            "balance": total
+        }
+        output_file = "expenses_" + project_id + ".json"
+        with open(output_file, "w", encoding="utf-8") as file:
+            json.dump(result, file, indent=2)
+        return True
