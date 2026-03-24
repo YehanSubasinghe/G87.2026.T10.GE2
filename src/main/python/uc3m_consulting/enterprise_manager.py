@@ -99,11 +99,16 @@ class EnterpriseManager:
         except ValueError as ex:
             raise EnterpriseManagementException(
                 "Invalid date: not a valid calendar date") from ex
-        today = datetime.now(timezone.utc).replace(
-            tzinfo=None, hour=0, minute=0, second=0, microsecond=0)
+        today = EnterpriseManager._get_today()
         if date_obj < today:
             raise EnterpriseManagementException(
                 "Invalid date: must be equal to or after request date")
+
+    @staticmethod
+    def _get_today():
+        """Returns today's date — isolated for testing"""
+        return datetime.now(timezone.utc).replace(
+            tzinfo=None, hour=0, minute=0, second=0, microsecond=0)
 
     @staticmethod
     def _validate_budget(budget):

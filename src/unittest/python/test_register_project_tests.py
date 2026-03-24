@@ -62,10 +62,15 @@ class TestRegisterProject(unittest.TestCase):
         self.assertEqual(len(result), 32)
         self.assertRegex(result, r'^[0-9a-f]{32}$')
 
-    @unittest.skip("skip for now")
-    def test_tc5_valid_yyyy_2025_mock_datetime(self):
-        """TC5 - Valid YYYY=2025, mocking datetime.now to 2024-12-31"""
-        pass
+    @patch("uc3m_consulting.enterprise_manager.EnterpriseManager._get_today")
+    def test_tc5_valid_yyyy_2025_mock_datetime(self, mock_today):
+        """TC5 - Valid YYYY=2025, mocking _get_today to 2024-12-31"""
+        mock_today.return_value = datetime(2024, 12, 31)
+        result = EnterpriseManager.register_project(
+            "B12345674", "PROJ1A", "ValidProj05",
+            "HR", "01/01/2025", 500000.00)
+        self.assertIsInstance(result, str)
+        self.assertEqual(len(result), 32)
 
     # ── INVALID – company_cif ──────────────────────────────────────────────
     def test_tc6_invalid_cif_length_8(self):
