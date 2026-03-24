@@ -17,7 +17,11 @@ class TestRegisterProject(unittest.TestCase):
     # ── VALID ──────────────────────────────────────────────────────────────
     def test_tc1_valid_all_ecs_bvv_lower_bounds(self):
         """TC1 - Valid case covering all ECs and lower BVVs"""
-        pass
+        result = EnterpriseManager.register_project(
+            "B12345674", "PROJ1", "ValidProj01", "HR", "15/06/2026", 50000.00)
+        self.assertIsInstance(result, str)
+        self.assertEqual(len(result), 32)
+        self.assertRegex(result, r'^[0-9a-f]{32}$')
 
     def test_tc2_valid_finance_acr6_desc11_bvv(self):
         """TC2 - Valid FINANCE, acronym len=6, desc len=11, DD=02 MM=02 YYYY=2027"""
