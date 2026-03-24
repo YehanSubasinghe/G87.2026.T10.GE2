@@ -78,5 +78,73 @@ class TestRegisterProject(unittest.TestCase):
         """TC15 - Description length=31, upper boundary +1 (ECNV14, BVNV6)"""
         pass
 
+# ── INVALID – department ──────────────────────────────────────────────
+    def test_tc16_invalid_department_not_allowed(self):
+        """TC16 - Department not in allowed list (ECNV16)"""
+        pass
+
+    # ── INVALID – date ────────────────────────────────────────────────────
+    def test_tc17_invalid_date_wrong_format(self):
+        """TC17 - Date format not DD/MM/YYYY (ECNV17)"""
+        pass
+
+    def test_tc18_invalid_date_dd_00(self):
+        """TC18 - DD=00, lower boundary -1 (ECNV18, BVNV7)"""
+        pass
+
+    def test_tc19_invalid_date_dd_32(self):
+        """TC19 - DD=32, upper boundary +1 (ECNV19, BVNV8)"""
+        pass
+
+    def test_tc20_invalid_date_mm_00(self):
+        """TC20 - MM=00, lower boundary -1 (ECNV20, BVNV9)"""
+        pass
+
+    def test_tc21_invalid_date_mm_13(self):
+        """TC21 - MM=13, upper boundary +1 (ECNV21, BVNV10)"""
+        pass
+
+    def test_tc22_invalid_date_yyyy_2024(self):
+        """TC22 - YYYY=2024, lower boundary -1 (ECNV22, BVNV11)"""
+        pass
+
+    def test_tc23_invalid_date_yyyy_2028(self):
+        """TC23 - YYYY=2028, upper boundary +1 (ECNV23, BVNV12)"""
+        pass
+
+    def test_tc24_invalid_date_not_calendar_date(self):
+        """TC24 - Date does not convert to valid Python date (ECNV24)"""
+        pass
+
+    def test_tc25_invalid_date_in_past(self):
+        """TC25 - Date is before request date (ECNV25)"""
+        pass
+
+    # ── INVALID – budget ──────────────────────────────────────────────────
+    def test_tc26_invalid_budget_not_float(self):
+        """TC26 - Budget is not a float (ECNV26)"""
+        pass
+
+    def test_tc27_invalid_budget_below_minimum(self):
+        """TC27 - Budget=49999.99, lower boundary -0.01 (ECNV28, BVNV13)"""
+        pass
+
+    def test_tc28_invalid_budget_above_maximum(self):
+        """TC28 - Budget=1000000.01, upper boundary +0.01 (ECNV27, BVNV14)"""
+        pass
+
+    def test_tc29_invalid_budget_no_decimals(self):
+        """TC29 - Budget with no decimal places (ECNV29)"""
+        pass
+
+    def test_tc30_invalid_budget_three_decimals(self):
+        """TC30 - Budget with 3 decimal places (ECNV30)"""
+        pass
+
+    # ── DUPLICATE ─────────────────────────────────────────────────────────
+    def test_tc31_invalid_duplicate_project(self):
+        """TC31 - Duplicate CIF + acronym already in JSON"""
+        pass
+
 if __name__ == '__main__':
     unittest.main()
