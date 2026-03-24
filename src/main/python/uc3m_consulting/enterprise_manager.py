@@ -5,6 +5,7 @@ import os
 from datetime import datetime, timezone
 from .enterprise_project import EnterpriseProject
 from .enterprise_management_exception import EnterpriseManagementException
+from .project_document import ProjectDocument
 
 VALID_DEPARTMENTS = ["HR", "FINANCE", "LEGAL", "LOGISTICS"]
 CORPORATE_OPERATIONS_FILE = "corporate_operations.json"
@@ -169,10 +170,30 @@ class EnterpriseManager:
             raise EnterpriseManagementException("JSON data has no valid values")
 
     @staticmethod
+    def _save_document(document):
+        """Saves the document to all_documents.json"""
+        all_docs_file = "all_documents.json"
+        data = []
+        if os.path.exists(all_docs_file):
+            with open(all_docs_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        data.append(document.to_json())
+        with open(all_docs_file, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+
+    @staticmethod
     def register_document(input_file: str):
         """Registers a document for a project"""
         data = EnterpriseManager._read_input_file(input_file)
         EnterpriseManager._validate_document_structure(data)
         EnterpriseManager._validate_document_values(
             data["PROJECT_ID"], data["FILENAME"])
-        pass
+        try:
+            document = ProjectDocument(data["PROJECT_ID"], data["FILENAME"])
+            EnterpriseManager._save_document(document)
+            return document.document_signature
+        except EnterpriseManagementException:
+            raise
+        except Exception as ex:
+            raise EnterpriseManagementException(
+                "Internal processing error when getting the file_signature") from ex
