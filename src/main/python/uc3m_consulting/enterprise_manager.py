@@ -40,9 +40,38 @@ class EnterpriseManager:
         return True
 
     @staticmethod
+    def _validate_acronym(project_achronym):
+        """Validates the project acronym"""
+        if not isinstance(project_achronym, str):
+            raise EnterpriseManagementException("Invalid acronym: must be a string")
+        if len(project_achronym) < 5 or len(project_achronym) > 10:
+            raise EnterpriseManagementException("Invalid acronym: length must be between 5 and 10")
+        if not re.match(r'^[A-Z0-9]+$', project_achronym):
+            raise EnterpriseManagementException("Invalid acronym: only A-Z and 0-9 allowed")
+
+    @staticmethod
+    def _validate_description(project_description):
+        """Validates the project description"""
+        if not isinstance(project_description, str):
+            raise EnterpriseManagementException("Invalid description: must be a string")
+        if len(project_description) < 10 or len(project_description) > 30:
+            raise EnterpriseManagementException("Invalid description: length must be between 10 and 30")
+
+    @staticmethod
+    def _validate_department(department):
+        """Validates the department value"""
+        if not isinstance(department, str):
+            raise EnterpriseManagementException("Invalid department: must be a string")
+        if department not in VALID_DEPARTMENTS:
+            raise EnterpriseManagementException("Invalid department: must be HR, FINANCE, LEGAL or LOGISTICS")
+
+    @staticmethod
     def register_project(company_cif: str, project_achronym: str,  # pylint: disable=too-many-arguments
                          project_description: str, department: str,
                          date: str, budget: float):
         """Registers a new project for a company"""
         EnterpriseManager._validate_cif(company_cif)
+        EnterpriseManager._validate_acronym(project_achronym)
+        EnterpriseManager._validate_description(project_description)
+        EnterpriseManager._validate_department(department)
         pass
