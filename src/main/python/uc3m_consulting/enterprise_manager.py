@@ -161,8 +161,18 @@ class EnterpriseManager:
             raise EnterpriseManagementException("JSON data has no valid values")
 
     @staticmethod
+    def _validate_document_values(project_id, filename):
+        """Validates PROJECT_ID and FILENAME values"""
+        if not re.match(r'^[0-9a-f]{32}$', project_id):
+            raise EnterpriseManagementException("JSON data has no valid values")
+        if not re.match(r'^[a-zA-Z0-9]{8}\.(pdf|docx|xlsx)$', filename):
+            raise EnterpriseManagementException("JSON data has no valid values")
+
+    @staticmethod
     def register_document(input_file: str):
         """Registers a document for a project"""
         data = EnterpriseManager._read_input_file(input_file)
         EnterpriseManager._validate_document_structure(data)
+        EnterpriseManager._validate_document_values(
+            data["PROJECT_ID"], data["FILENAME"])
         pass
