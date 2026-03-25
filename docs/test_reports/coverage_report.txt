@@ -1,0 +1,9 @@
+Name                                                                 Stmts   Miss  Cover
+----------------------------------------------------------------------------------------
+src/main/python/uc3m_consulting/__init__.py                              4      0   100%
+src/main/python/uc3m_consulting/enterprise_management_exception.py      10      1    90%
+src/main/python/uc3m_consulting/enterprise_manager.py                  182     15    92%
+src/main/python/uc3m_consulting/enterprise_project.py                   59     13    78%
+src/main/python/uc3m_consulting/project_document.py                     35      6    83%
+----------------------------------------------------------------------------------------
+TOTAL                                                                  290     35    88%
