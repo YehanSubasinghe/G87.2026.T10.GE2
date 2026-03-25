@@ -75,7 +75,7 @@ class TestRegisterProject(unittest.TestCase): # pylint: disable=too-many-public-
     # ── INVALID – company_cif ──────────────────────────────────────────────
     def test_tc6_invalid_cif_length_8(self):
         """TC6 - CIF length=8, lower boundary -1 (ECNV3, BVNV1)"""
-        with self.assertRaises(EnterpriseManagementException):
+        with self.assertRaisesRegex(EnterpriseManagementException, "length must be 9"):
             EnterpriseManager.register_project(
                 "B1234567", self.VALID_ACR, self.VALID_DESC,
                 self.VALID_DEPT, self.VALID_DATE, self.VALID_BUD)
@@ -111,7 +111,7 @@ class TestRegisterProject(unittest.TestCase): # pylint: disable=too-many-public-
     # ── INVALID – project_acronym ──────────────────────────────────────────
     def test_tc11_invalid_acronym_length_4(self):
         """TC11 - Acronym length=4, lower boundary -1 (ECNV9, BVNV3)"""
-        with self.assertRaises(EnterpriseManagementException):
+        with self.assertRaisesRegex(EnterpriseManagementException, "length must be between 5 and 10"):
             EnterpriseManager.register_project(
                 self.VALID_CIF, "PRJ1", self.VALID_DESC,
                 self.VALID_DEPT, self.VALID_DATE, self.VALID_BUD)
@@ -148,7 +148,7 @@ class TestRegisterProject(unittest.TestCase): # pylint: disable=too-many-public-
     # ── INVALID – department ──────────────────────────────────────────────
     def test_tc16_invalid_department_not_allowed(self):
         """TC16 - Department not in allowed list (ECNV16)"""
-        with self.assertRaises(EnterpriseManagementException):
+        with self.assertRaisesRegex(EnterpriseManagementException, "must be HR"):
             EnterpriseManager.register_project(
                 self.VALID_CIF, self.VALID_ACR, self.VALID_DESC,
                 "MARKETING", self.VALID_DATE, self.VALID_BUD)
@@ -163,7 +163,7 @@ class TestRegisterProject(unittest.TestCase): # pylint: disable=too-many-public-
 
     def test_tc18_invalid_date_dd_00(self):
         """TC18 - DD=00, lower boundary -1 (ECNV18, BVNV7)"""
-        with self.assertRaises(EnterpriseManagementException):
+        with self.assertRaisesRegex(EnterpriseManagementException, "DD must be between 01 and 31"):
             EnterpriseManager.register_project(
                 self.VALID_CIF, self.VALID_ACR, self.VALID_DESC,
                 self.VALID_DEPT, "00/06/2027", self.VALID_BUD)
@@ -227,7 +227,7 @@ class TestRegisterProject(unittest.TestCase): # pylint: disable=too-many-public-
 
     def test_tc27_invalid_budget_below_minimum(self):
         """TC27 - Budget=49999.99, lower boundary -0.01 (ECNV28, BVNV13)"""
-        with self.assertRaises(EnterpriseManagementException):
+        with self.assertRaisesRegex(EnterpriseManagementException, "50000.00"):
             EnterpriseManager.register_project(
                 self.VALID_CIF, self.VALID_ACR, self.VALID_DESC,
                 self.VALID_DEPT, self.VALID_DATE, 49999.99)
@@ -259,7 +259,7 @@ class TestRegisterProject(unittest.TestCase): # pylint: disable=too-many-public-
         EnterpriseManager.register_project(
             self.VALID_CIF, self.VALID_ACR, self.VALID_DESC,
             self.VALID_DEPT, self.VALID_DATE, self.VALID_BUD)
-        with self.assertRaises(EnterpriseManagementException):
+        with self.assertRaisesRegex(EnterpriseManagementException, "Duplicate"):
             EnterpriseManager.register_project(
                 self.VALID_CIF, self.VALID_ACR, self.VALID_DESC,
                 self.VALID_DEPT, self.VALID_DATE, self.VALID_BUD)
