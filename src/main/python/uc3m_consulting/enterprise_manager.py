@@ -39,11 +39,6 @@ class EnterpriseManager:
                 "Invalid CIF: control digit does not match")
 
     @staticmethod
-    def validate_cif(_cif: str):
-        """Returns True if the CIF received is valid"""
-        return True
-
-    @staticmethod
     def _validate_acronym(project_achronym):
         """Validates the project acronym"""
         if not isinstance(project_achronym, str):
